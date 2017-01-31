@@ -105,7 +105,6 @@ game.HUD.HealthItem = me.Renderable.extend( {
     return false;
   },
   
-  
 
   /**
    * draw the score
@@ -135,11 +134,8 @@ game.HUD.DeathClock = me.Renderable.extend({
 				me.state.change( me.state.GAMEOVER );
 				
 			}).start()
-		
-		
+
 	},
-	
-	 
 
 	draw: function(renderer) {
 
