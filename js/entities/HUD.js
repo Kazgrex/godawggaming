@@ -112,19 +112,21 @@ game.HUD.HealthItem = me.Renderable.extend( {
    */
   draw : function (renderer) {
         // this.pos.x, this.pos.y are the relative position from the screen right bottom
-		this.font.draw (renderer, game.data.health, me.game.viewport.width + this.pos.x, me.game.viewport.height + this.pos.y);
+		this.font.draw (renderer, "Life:" + game.data.health, me.game.viewport.width + this.pos.x, me.game.viewport.height + this.pos.y);
   }
 });
+
+//add timer
 
 game.HUD.DeathClock = me.Renderable.extend({
 	init: function(x, y) {
 		this._super(me.Renderable, 'init', [x, y, 10, 10]);
-		//this.anchorPoint = new me.Vector2d(0, 0);
-		this.remainingTime = 179;
+		this.remainingTime = 15;
 		this.origRemainingTime = this.remainingTime;
 		this.font = new me.BitmapFont(me.loader.getBinary('PressStart2P'), me.loader.getImage('PressStart2P'));
 		this.font.textAlign = "Left";
 		this.font.textBaseline = "top";
+		this.clock = -1;
 		this.tween = new me.Tween(this).to({
 			remainingTime: 0,
 		}, this.remainingTime * 1000).onComplete(() => {
@@ -133,19 +135,11 @@ game.HUD.DeathClock = me.Renderable.extend({
 				me.state.change( me.state.GAMEOVER );
 				
 			}).start()
-		this.clock = -1;
+		
 		
 	},
 	
-	update : function (dt) {
-    // we don't draw anything fancy here, so just
-    // return true if the clock has been updated
-    if (this.clock !== game.data.clock) {
-      this.clock = game.data.clock;
-      return true;
-    }
-    return false;
-  },
+	 
 
 	draw: function(renderer) {
 
@@ -157,6 +151,6 @@ game.HUD.DeathClock = me.Renderable.extend({
 		var seconds = Math.ceil(divisor_for_seconds);
 
 		this.font.draw(renderer, "Time: " + minutes + ":" + ('00' + seconds).slice(-2), me.game.viewport.width + this.pos.x, me.game.viewport.height + this.pos.y);
-		//this.font.draw(ctx, `DEATHCLOCK: ${Math.floor(this.remainingTime)}`, this.pos.x, this.pos.y);
+		
 	}
 });

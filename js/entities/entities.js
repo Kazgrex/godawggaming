@@ -160,7 +160,9 @@ onCollision : function (response, other) {
 
         // Do not respond to the platform (pass through)
         return false;
-      }
+      } else if(other.type === "spike") {
+		  this.dead();
+	  }
       break;
 
    case me.collision.types.ENEMY_OBJECT:
@@ -201,6 +203,26 @@ onCollision : function (response, other) {
 		me.game.viewport.fadeIn("#FFFFFF", 75);
 		me.audio.play("stomp");
 		game.data.health -= 1;
+        }else{
+			if( game.data.health <= 0)
+			{
+				me.game.world.removeChild(this);
+				me.game.viewport.fadeIn("#fff", 150, function(){
+				me.audio.play("die", false);
+                me.state.change(me.state.GAMEOVER);
+                me.game.viewport.fadeOut("#fff", 150);
+			})
+		}	
+    }
+ },
+ 
+  dead : function () {
+        if (!this.renderable.isFlickering())
+        {
+         this.renderable.flicker(1000);
+		me.game.viewport.fadeIn("#FFFFFF", 75);
+		me.audio.play("stomp");
+		game.data.health -= 3;
         }else{
 			if( game.data.health <= 0)
 			{

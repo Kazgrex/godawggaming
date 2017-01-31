@@ -11,9 +11,7 @@ var game = {
 	health : 3
   },
   
-	data : {
-	clock : 179
-	},
+
   // Run on page load.
   onload : function () {
     // Initialize the video.
@@ -67,6 +65,7 @@ loaded : function () {
   me.pool.register("mainPlayer", game.PlayerEntity);
   me.pool.register("CoinEntity", game.CoinEntity);
   me.pool.register("EnemyEntity", game.EnemyEntity);
+ 
 
   
 
