@@ -120,7 +120,7 @@ game.HUD.HealthItem = me.Renderable.extend( {
 game.HUD.DeathClock = me.Renderable.extend({
 	init: function(x, y) {
 		this._super(me.Renderable, 'init', [x, y, 10, 10]);
-		this.remainingTime = 15;
+		this.remainingTime = 59;
 		this.origRemainingTime = this.remainingTime;
 		this.font = new me.BitmapFont(me.loader.getBinary('PressStart2P'), me.loader.getImage('PressStart2P'));
 		this.font.textAlign = "Left";

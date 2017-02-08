@@ -289,8 +289,8 @@ game.EnemyEntity = me.Entity.extend({
 
     // adjust the size setting information to match the sprite size
     // so that the entity object is created with the right size
-    //settings.framewidth = settings.width = 39;
-    //settings.frameheight = settings.height = 63;
+   // settings.width = settings.spritewidth;
+    //settings.height = settings.spriteheight;
 
     // redefine the default shape (used to define path) with a shape matching the renderable
     settings.shapes[0] = new me.Rect(0, 0, settings.framewidth, settings.frameheight);
@@ -303,6 +303,8 @@ game.EnemyEntity = me.Entity.extend({
     this.startX = x;
     this.endX   = x + width - settings.framewidth
     this.pos.x  = x + width - settings.framewidth;
+	
+	this.body.gravity = settings.gravity || me.sys.gravity;
 
     // to remember which side we were walking
     this.walkLeft = false;
@@ -377,8 +379,32 @@ onCollision : function (response, other) {
     // Make all other objects solid
     return true;
   }
-  
+});
+  game.FlyEnemyEntity = game.EnemyEntity.extend({
+    /**
+     * constructor
+     */
+    init: function (x, y, settings) {
+        // super constructor
+        this._super(game.EnemyEntity, "init", [x, y, settings]);
+
+    }
   
 });
+
+  game.SlowEnemyEntity = game.EnemyEntity.extend({
+    /**
+     * constructor
+     */
+    init: function (x, y, settings) {
+        // super constructor
+        this._super(game.EnemyEntity, "init", [x, y, settings]);
+		// walking & jumping speed
+		this.body.setVelocity(2, 6);
+
+    }
+  
+});
+  
   
 

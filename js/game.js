@@ -12,7 +12,7 @@ var game = {
   },
   
 	data : {
-		clock : 15
+		clock : 59
 	},
   // Run on page load.
   onload : function () {
@@ -67,6 +67,8 @@ loaded : function () {
   me.pool.register("mainPlayer", game.PlayerEntity);
   me.pool.register("CoinEntity", game.CoinEntity);
   me.pool.register("EnemyEntity", game.EnemyEntity);
+  me.pool.register("FlyEnemyEntity", game.FlyEnemyEntity);
+  me.pool.register("SlowEnemyEntity", game.SlowEnemyEntity);
 
  
 
