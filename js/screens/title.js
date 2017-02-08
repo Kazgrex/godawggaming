@@ -19,6 +19,7 @@ game.TitleScreen = me.ScreenObject.extend({
     // add to the world container
     me.game.world.addChild(backgroundImage, 1);
 
+	 me.audio.playTrack("UW");
     // add a new renderable component with the scrolling text
     me.game.world.addChild(new (me.Renderable.extend ({
       // constructor
@@ -78,6 +79,7 @@ game.TitleScreen = me.ScreenObject.extend({
   onDestroyEvent : function () {
     me.input.unbindKey(me.input.KEY.ENTER);
     me.input.unbindPointer(me.input.pointer.LEFT);
+	me.audio.stopTrack();
     me.event.unsubscribe(this.handler);
   }
 });

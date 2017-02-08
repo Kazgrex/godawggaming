@@ -47,6 +47,10 @@ game.PlayerEntity = me.Entity.extend({
 
     // set the standing animation as default
     this.renderable.setCurrentAnimation("stand");
+	
+	
+	
+
 
   },
 
@@ -162,7 +166,7 @@ onCollision : function (response, other) {
         return false;
       } else if(other.type === "spike") {
 		  this.dead();
-	  }
+	  } 
       break;
 
    case me.collision.types.ENEMY_OBJECT:
@@ -224,7 +228,7 @@ onCollision : function (response, other) {
 		me.audio.play("stomp");
 		game.data.health -= 3;
         }else{
-			if( game.data.health <= 0)
+			if( game.data.health<= 0)
 			{
 				me.game.world.removeChild(this);
 				me.game.viewport.fadeIn("#fff", 150, function(){
@@ -235,6 +239,8 @@ onCollision : function (response, other) {
 		}	
     }
  }
+    
+	
 })
    
    
@@ -275,8 +281,7 @@ game.CoinEntity = me.CollectableEntity.extend({
  */
 game.EnemyEntity = me.Entity.extend({
   init: function (x, y, settings) {
-    // define this here instead of tiled
-    settings.image = "wheelie_right";
+ 
 
     // save the area size defined in Tiled
     var width = settings.width;
@@ -284,8 +289,8 @@ game.EnemyEntity = me.Entity.extend({
 
     // adjust the size setting information to match the sprite size
     // so that the entity object is created with the right size
-    settings.framewidth = settings.width = 64;
-    settings.frameheight = settings.height = 64;
+    //settings.framewidth = settings.width = 39;
+    //settings.frameheight = settings.height = 63;
 
     // redefine the default shape (used to define path) with a shape matching the renderable
     settings.shapes[0] = new me.Rect(0, 0, settings.framewidth, settings.frameheight);
@@ -303,10 +308,14 @@ game.EnemyEntity = me.Entity.extend({
     this.walkLeft = false;
 
     // walking & jumping speed
-    this.body.setVelocity(2, 6);
+    this.body.setVelocity(4, 6);
+	// set a "enemyObject" type
+        this.body.collisionType = me.collision.types.ENEMY_OBJECT;
 	// a specific flag to recognize these enemies
     this.isMovingEnemy = true;
 
+	// don't update the entities when out of the viewport
+     this.alwaysUpdate = false;
 
   },
 
@@ -345,30 +354,7 @@ game.EnemyEntity = me.Entity.extend({
    * colision handler
    * (called when colliding with other objects)
    */
-    /*  onCollision : function (response) {
-        // res.y >0 means touched by something on the bottom
-        // which mean at top position for this one
-        if (this.alive && (response.overlapV.y > 0) && response.a.body.falling) {
-            // make it dead
-            this.alive = false;
-            //avoid further collision and delete it
-            this.body.setCollisionMask(me.collision.types.NO_OBJECT);
-            // set dead animation
-            //this.renderable.setCurrentAnimation("dead");
-            // make it flicker and call destroy once timer finished
-            var self = this;
-            this.renderable.flicker(750, function () {
-                me.game.world.removeChild(self);
-            });
-            // dead sfx
-           // me.audio.play("enemykill", false);
-            // give some score
-            game.data.score += 250;
-        }
-
-        return true;
    
-}*/
 onCollision : function (response, other) {
     if (response.b.body.collisionType !== me.collision.types.WORLD_SHAPE) {
       // res.y >0 means touched by something on the bottom
@@ -391,6 +377,8 @@ onCollision : function (response, other) {
     // Make all other objects solid
     return true;
   }
+  
+  
 });
   
 

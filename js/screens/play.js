@@ -16,9 +16,6 @@ game.PlayScreen = me.ScreenObject.extend({
 	
 	// play the audio track
   me.audio.playTrack("dst-inertexponent");
-  
-
-
 
     // add our HUD to the game world
     this.HUD = new game.HUD.Container();

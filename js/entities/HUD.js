@@ -133,7 +133,9 @@ game.HUD.DeathClock = me.Renderable.extend({
 				me.audio.play("die");
 				me.state.change( me.state.GAMEOVER );
 				
-			}).start()
+			});
+			this.tween.isPersistent = true;
+			this.tween.start();
 
 	},
 
@@ -148,5 +150,9 @@ game.HUD.DeathClock = me.Renderable.extend({
 
 		this.font.draw(renderer, "Time: " + minutes + ":" + ('00' + seconds).slice(-2), me.game.viewport.width + this.pos.x, me.game.viewport.height + this.pos.y);
 		
-	}
+	},
+	onDestroyEvent : function () {
+        //just in case
+        this.tween.stop();
+      }
 });
