@@ -20,7 +20,7 @@ game.HUD.Container = me.Container.extend({
     // add our child score object
     this.addChild(new game.HUD.ScoreItem(-10, -10));
 	
-	this.addChild(new game.HUD.HealthItem(-10, -470));
+	this.addChild(new game.HUD.HealthItem(600, 20));
 	
 	this.addChild(new game.HUD.DeathClock(-640, -470));
   }
@@ -82,12 +82,17 @@ game.HUD.HealthItem = me.Renderable.extend( {
     this._super(me.Renderable, 'init', [x, y, 10, 10]);
 
     // create the font object
-    this.font = new me.BitmapFont(me.loader.getBinary('PressStart2P'), me.loader.getImage('PressStart2P'));
+    /* this.font = new me.BitmapFont(me.loader.getBinary('PressStart2P'), me.loader.getImage('PressStart2P'));
 
     // font alignment to right, bottom
     this.font.textAlign = "right";
-    this.font.textBaseline = "top";
-
+    this.font.textBaseline = "top"; */
+	this.sprite = new me.Sprite(this.pos.x, this.pos.y, {
+		image: "hearts",
+			framewidth : 32,
+			frameheight : 32,
+			//anchorPoint : new me.Vector2d(0.5, 0.5)
+	});
     // local copy of the global health
     this.health = -1;
   },
@@ -98,20 +103,25 @@ game.HUD.HealthItem = me.Renderable.extend( {
   update : function (dt) {
     // we don't draw anything fancy here, so just
     // return true if the health has been updated
-    if (this.health !== game.data.health) {
+     if (this.health !== game.data.health) {
       this.health = game.data.health;
       return true;
     }
-    return false;
+    return false; 
+	
   },
-  
 
   /**
    * draw the score
    */
   draw : function (renderer) {
         // this.pos.x, this.pos.y are the relative position from the screen right bottom
-		this.font.draw (renderer, "Life:" + game.data.health, me.game.viewport.width + this.pos.x, me.game.viewport.height + this.pos.y);
+		//this.font.draw (renderer, "Life:" + game.data.health, me.game.viewport.width + this.pos.x, me.game.viewport.height + this.pos.y);
+		for (var i = 0; i < game.data.health; i++)
+    	{
+    		this.sprite.pos.x = (35*i) + 550;
+    		this.sprite.draw(renderer, me.game.viewport.width + this.pos.x, me.game.viewport.height + this.pos.y);
+    	}
   }
 });
 

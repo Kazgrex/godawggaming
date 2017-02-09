@@ -77,7 +77,7 @@
     <property name="image" value="hawk"/>
    </properties>
   </object>
-  <object id="32" name="EnemyEntity" x="283.167" y="57.8333" width="455" height="63">
+  <object id="32" name="EnemyEntity" x="284.5" y="-142.167" width="455" height="63">
    <properties>
     <property name="frameheight" value="66"/>
     <property name="framewidth" value="122"/>
@@ -87,8 +87,8 @@
  </objectgroup>
  <objectgroup name="collision">
   <object id="2" x="0" y="448" width="318" height="28"/>
-  <object id="3" x="0" y="5">
-   <polyline points="0,0 2,437 1,-2 0,-2"/>
+  <object id="3" x="0" y="-176.798">
+   <polyline points="0,0 2,626.798 1,-2.86864 0,-2.86864"/>
   </object>
   <object id="4" x="419" y="354" width="91" height="128"/>
   <object id="5" x="610" y="257" width="97" height="223"/>
@@ -99,7 +99,6 @@
   <object id="10" x="1155" y="447" width="93" height="30"/>
   <object id="12" type="platform" x="162" y="258" width="92" height="16"/>
   <object id="13" type="platform" x="7" y="258" width="92" height="16"/>
-  <object id="14" x="-2" y="-25" width="1226" height="27"/>
   <object id="28" type="spike" x="510.5" y="450.5" width="93" height="13"/>
   <object id="29" type="spike" x="1090" y="453" width="58" height="10"/>
  </objectgroup>

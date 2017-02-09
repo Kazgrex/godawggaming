@@ -16,6 +16,8 @@ game.PlayerEntity = me.Entity.extend({
   me.input.bindKey(me.input.KEY.LEFT, "left");
   me.input.bindKey(me.input.KEY.RIGHT, "right");
   me.input.bindKey(me.input.KEY.UP, "jump", true);
+  //me.input.bindKey(me.input.KEY.X, "flip");
+  
   
   me.input.bindGamepad(0, {type: "buttons", code: me.input.GAMEPAD.BUTTONS.FACE_1}, me.input.KEY.UP);
   me.input.bindGamepad(0, {type: "buttons", code: me.input.GAMEPAD.BUTTONS.FACE_2}, me.input.KEY.UP);
@@ -43,7 +45,7 @@ game.PlayerEntity = me.Entity.extend({
     this.renderable.addAnimation("stand",  [0, 0, 0]);
 	
 	//define a jumping animation
-	this.renderable.addAnimation("jump", [7, 7]);
+	this.renderable.addAnimation("jump", [7]);
 
     // set the standing animation as default
     this.renderable.setCurrentAnimation("stand");
@@ -58,7 +60,14 @@ game.PlayerEntity = me.Entity.extend({
  * update the player pos
  */
 update : function (dt) {
-
+//add flip gravity
+/*         if (me.input.isKeyPressed('flip'))
+        {
+            // set current vel to the maximum defined value
+            // gravity will then do the rest
+            this.body.gravity = -this.body.gravity;
+            this.renderable.flipY(this.body.gravity < 0);
+        } */
   if (me.input.isKeyPressed('left')) {
     // flip the sprite on horizontal axis
     this.renderable.flipX(true);
@@ -67,7 +76,7 @@ update : function (dt) {
     this.body.vel.x -= this.body.accel.x * me.timer.tick;
 
     // change to the walking animation
-    if (!this.renderable.isCurrentAnimation("walk") && !this.renderable.isCurrentAnimation("jump")) {
+    if (!this.renderable.isCurrentAnimation("walk") ) {
                   this.renderable.setCurrentAnimation("walk");
               }
   }
@@ -79,7 +88,7 @@ update : function (dt) {
     this.body.vel.x += this.body.accel.x * me.timer.tick;
 
     // change to the walking animation
-     if (!this.renderable.isCurrentAnimation("walk") && !this.renderable.isCurrentAnimation("jump")) {
+     if (!this.renderable.isCurrentAnimation("walk") ) {
                   this.renderable.setCurrentAnimation("walk");
               }
   }
@@ -87,16 +96,21 @@ update : function (dt) {
 
        
 		 if (me.input.isKeyPressed("jump")) {
-            this.body.jumping = true;
+            
+			  this.renderable.setCurrentAnimation("jump");
 
-            if (this.multipleJump <= 2) {
+            if (this.multipleJump <= 2 && this.body.gravity > 0) {
                 // easy "math" for double jump
-                this.body.vel.y -= (this.body.maxVel.y * this.multipleJump++) * me.timer.tick;
-				if (!this.renderable.isCurrentAnimation("jump")) {
-                this.renderable.setCurrentAnimation("jump");
-              }
-                me.audio.play("jump", false);
-            }
+              this.body.vel.y -= (this.body.maxVel.y * this.multipleJump++) * me.timer.tick;
+			  this.body.jumping = true;
+              me.audio.play("jump", false);
+            }else if(this.multipleJump <= 2 && this.body.gravity < 0) {
+			this.body.vel.y = (this.body.maxVel.y * this.multipleJump++) * me.timer.tick;
+			}
+			
+        }
+		 if (this.body.jumping || this.body.falling){
+            this.renderable.setCurrentAnimation("jump");
         }
         else if (!this.body.falling && !this.body.jumping) {
             // reset the multipleJump flag if on the ground
