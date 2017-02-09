@@ -50,10 +50,6 @@ game.PlayerEntity = me.Entity.extend({
     // set the standing animation as default
     this.renderable.setCurrentAnimation("stand");
 	
-	
-	
-
-
   },
 
   /**
@@ -92,9 +88,7 @@ update : function (dt) {
                   this.renderable.setCurrentAnimation("walk");
               }
   }
-  
-
-       
+     
 		 if (me.input.isKeyPressed("jump")) {
             
 			  this.renderable.setCurrentAnimation("jump");
@@ -125,7 +119,7 @@ update : function (dt) {
   this.body.update(dt);
   
           // check if we fell into a hole
-        if (!this.inViewport && (this.pos.y > me.video.renderer.getHeight())) {
+        if (!this.inViewport && (this.pos.y > me.video.renderer.getHeight()) && (this.body.gravity > 0)) {
             // if yes reset the game
             me.game.world.removeChild(this);
             me.game.viewport.fadeIn("#fff", 150, function(){
@@ -134,15 +128,16 @@ update : function (dt) {
                 me.game.viewport.fadeOut("#fff", 150);
             });
             return true;
-        }else if(!this.inViewport && (this.pos.y < me.video.renderer.getHeight())) {
-			 me.game.world.removeChild(this);
+        } else if(!this.inViewport && (this.pos.y < me.video.renderer.getHeight()) && (this.body.gravity < 0)) {
+            // if yes reset the game
+            me.game.world.removeChild(this);
             me.game.viewport.fadeIn("#fff", 150, function(){
                 me.audio.play("die", false);
                 me.state.change(me.state.GAMEOVER);
                 me.game.viewport.fadeOut("#fff", 150);
             });
             return true;
-        }
+        } 
   // handle collisions against other shapes
   me.collision.check(this);
 
@@ -193,9 +188,7 @@ onCollision : function (response, other) {
 					this.body.gravity = -this.body.gravity;
 					this.renderable.flipY(this.body.gravity < 0);
 				}
-				break;
-					
-		
+				break;		
 
    case me.collision.types.ENEMY_OBJECT:
                 if (!other.isMovingEnemy) {
@@ -226,25 +219,24 @@ onCollision : function (response, other) {
         return true;
     },
 
-
-
  hurt : function () {
         if (!this.renderable.isFlickering())
         {
          this.renderable.flicker(1000);
 		me.game.viewport.fadeIn("#FFFFFF", 75);
-		me.audio.play("stomp");
+		me.audio.play("hurt");
 		game.data.health -= 1;
         }else{
 			if( game.data.health <= 0)
 			{
+				me.game.viewport.shake(10, 500, me.game.viewport.AXIS.BOTH);
 				me.game.world.removeChild(this);
 				me.game.viewport.fadeIn("#fff", 150, function(){
-				me.audio.play("die", false);
                 me.state.change(me.state.GAMEOVER);
+				me.audio.play("die", false);
                 me.game.viewport.fadeOut("#fff", 150);
 			})
-		}	
+		}
     }
  },
  
@@ -252,26 +244,23 @@ onCollision : function (response, other) {
         if (!this.renderable.isFlickering())
         {
          this.renderable.flicker(1000);
+		 me.game.viewport.shake(10, 500, me.game.viewport.AXIS.BOTH);
 		me.game.viewport.fadeIn("#FFFFFF", 75);
-		me.audio.play("stomp");
+		//me.audio.play("hurt");
 		game.data.health -= 3;
         }else{
 			if( game.data.health<= 0)
 			{
 				me.game.world.removeChild(this);
 				me.game.viewport.fadeIn("#fff", 150, function(){
-				me.audio.play("die", false);
                 me.state.change(me.state.GAMEOVER);
+				me.audio.play("die", false);
                 me.game.viewport.fadeOut("#fff", 150);
 			})
 		}	
     }
- }
-    
-	
-})
-   
-   
+ }  
+})  
 /**
  * a Coin entity
  */
@@ -352,6 +341,8 @@ game.EnemyEntity = me.Entity.extend({
 
     // call the parent constructor
     this._super(me.Entity, 'init', [x, y , settings]);
+	
+	this.renderable.addAnimation("dead", [6]);
 
     // set start/end position based on the initial area size
     x = this.pos.x;
@@ -421,7 +412,8 @@ onCollision : function (response, other) {
             //avoid further collision and delete it
             this.body.setCollisionMask(me.collision.types.NO_OBJECT);
             // set dead animation
-            //this.renderable.setCurrentAnimation("dead");
+           this.renderable.setCurrentAnimation("dead");
+			me.audio.play("stomp");
             // make it flicker and call destroy once timer finished
             var self = this;
             this.renderable.flicker(750, function () {
@@ -442,6 +434,9 @@ onCollision : function (response, other) {
     init: function (x, y, settings) {
         // super constructor
         this._super(game.EnemyEntity, "init", [x, y, settings]);
+		this.renderable.addAnimation("walk",  [ 0, 1, 2, 3, 4, 5]);
+		this.renderable.addAnimation ("dead", [6]);
+		this.renderable.setCurrentAnimation("walk");
 
     }
   
@@ -456,7 +451,23 @@ onCollision : function (response, other) {
         this._super(game.EnemyEntity, "init", [x, y, settings]);
 		// walking & jumping speed
 		this.body.setVelocity(2, 6);
+		this.renderable.addAnimation("walk",  [ 0, 1, 2, 3, 4]);
+		this.renderable.addAnimation ("dead", [5]);
+		this.renderable.setCurrentAnimation("walk");
+    }
+  
+});
 
+  game.ChaseEnemyEntity = game.EnemyEntity.extend({
+    /**
+     * constructor
+     */
+    init: function (x, y, settings) {
+        // super constructor
+        this._super(game.EnemyEntity, "init", [x, y, settings]);
+		this.renderable.addAnimation("walk",  [ 0, 1, 2, 3, 4, 5]);
+		this.renderable.addAnimation ("dead", [6]);
+		this.renderable.setCurrentAnimation("walk");
     }
   
 });

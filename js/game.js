@@ -70,7 +70,7 @@ loaded : function () {
   me.pool.register("FlyEnemyEntity", game.FlyEnemyEntity);
   me.pool.register("SlowEnemyEntity", game.SlowEnemyEntity);
   me.pool.register("FlipEntity", game.FlipEntity);
- 
+  me.pool.register("ChaseEnemyEntity", game.ChaseEnemyEntity);
 
   
 
