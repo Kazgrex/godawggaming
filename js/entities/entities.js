@@ -88,18 +88,19 @@ update : function (dt) {
                   this.renderable.setCurrentAnimation("walk");
               }
   }
-     
 		 if (me.input.isKeyPressed("jump")) {
             
 			  this.renderable.setCurrentAnimation("jump");
 
             if (this.multipleJump <= 2 && this.body.gravity > 0) {
-                // easy "math" for double jump
+              // easy "math" for double jump
               this.body.vel.y -= (this.body.maxVel.y * this.multipleJump++) * me.timer.tick;
 			  this.body.jumping = true;
               me.audio.play("jump", false);
             }else if(this.multipleJump <= 2 && this.body.gravity < 0) {
 			this.body.vel.y = (this.body.maxVel.y * this.multipleJump++) * me.timer.tick;
+			this.body.jumping = true;
+            me.audio.play("jump", false);
 			}
 			
         }
@@ -109,11 +110,11 @@ update : function (dt) {
         else if (!this.body.falling && !this.body.jumping) {
             // reset the multipleJump flag if on the ground
             this.multipleJump = 1;
-        }
-        else if (this.body.falling && this.multipleJump < 2) {
+        } 
+         else if (this.body.falling && this.multipleJump < 2) {
             // reset the multipleJump flag if falling
             this.multipleJump = 2;
-        }
+        } 
 
   // apply physics to the body (this moves the entity)
   this.body.update(dt);
