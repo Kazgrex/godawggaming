@@ -134,10 +134,15 @@ update : function (dt) {
                 me.game.viewport.fadeOut("#fff", 150);
             });
             return true;
+        }else if(!this.inViewport && (this.pos.y < me.video.renderer.getHeight())) {
+			 me.game.world.removeChild(this);
+            me.game.viewport.fadeIn("#fff", 150, function(){
+                me.audio.play("die", false);
+                me.state.change(me.state.GAMEOVER);
+                me.game.viewport.fadeOut("#fff", 150);
+            });
+            return true;
         }
-
-
-
   // handle collisions against other shapes
   me.collision.check(this);
 
@@ -182,6 +187,15 @@ onCollision : function (response, other) {
 		  this.dead();
 	  } 
       break;
+	  
+	case me.collision.types.ACTION_OBJECT:
+				if(other.type === "flip") {
+					this.body.gravity = -this.body.gravity;
+					this.renderable.flipY(this.body.gravity < 0);
+				}
+				break;
+					
+		
 
    case me.collision.types.ENEMY_OBJECT:
                 if (!other.isMovingEnemy) {
@@ -290,6 +304,33 @@ game.CoinEntity = me.CollectableEntity.extend({
   }
 })
 
+game.FlipEntity = me.CollectableEntity.extend({
+  // extending the init function is not mandatory
+  // unless you need to add some extra initialization
+  init: function (x, y, settings) {
+    // call the parent constructor
+    this._super(me.CollectableEntity, 'init', [x, y , settings]);
+	this.body.collisionType = me.collision.types.ACTION_OBJECT;
+  },
+
+  // this function is called by the engine, when
+  // an object is touched by something (here collected)
+  onCollision : function (response, other) {
+    // do something when collected
+	
+	// play a "coin collected" sound
+  me.audio.play("flip");
+
+  
+    // make sure it cannot be collected "again"
+    this.body.setCollisionMask(me.collision.types.NO_OBJECT);
+
+    // remove it
+    me.game.world.removeChild(this);
+
+    return false
+  }
+})
 /**
  * an enemy Entity
  */

@@ -69,7 +69,7 @@ loaded : function () {
   me.pool.register("EnemyEntity", game.EnemyEntity);
   me.pool.register("FlyEnemyEntity", game.FlyEnemyEntity);
   me.pool.register("SlowEnemyEntity", game.SlowEnemyEntity);
-
+  me.pool.register("FlipEntity", game.FlipEntity);
  
 
   
