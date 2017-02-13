@@ -89,35 +89,34 @@ update : function (dt) {
               }
   }
 		 if (me.input.isKeyPressed("jump")) {
-            
-			  this.renderable.setCurrentAnimation("jump");
-
+			 this.body.jumping = true;
+			this.renderable.setCurrentAnimation("jump");
             if (this.multipleJump <= 2 && this.body.gravity > 0) {
               // easy "math" for double jump
-              this.body.vel.y -= (this.body.maxVel.y * this.multipleJump++) * me.timer.tick;
-			  this.body.jumping = true;
-              me.audio.play("jump", false);
-            }else if(this.multipleJump <= 2 && this.body.gravity < 0) {
-			this.body.vel.y = (this.body.maxVel.y * this.multipleJump++) * me.timer.tick;
-			this.body.jumping = true;
-            me.audio.play("jump", false);
+				this.body.vel.y -= (this.body.maxVel.y * this.multipleJump++) * me.timer.tick;
+				me.audio.play("jump", false);
+            }if(this.multipleJump <= 2 && this.body.gravity < 0) {
+				this.body.vel.y = (this.body.maxVel.y * this.multipleJump++) * me.timer.tick;
+				me.audio.play("jump", false);
 			}
-			
         }
 		 if (this.body.jumping || this.body.falling){
             this.renderable.setCurrentAnimation("jump");
         }
-        else if (!this.body.falling && !this.body.jumping) {
+        if (!this.body.falling && !this.body.jumping) {
             // reset the multipleJump flag if on the ground
             this.multipleJump = 1;
         } 
-         else if (this.body.falling && this.multipleJump < 2) {
+	
+        if (this.body.falling && this.multipleJump < 2) {
             // reset the multipleJump flag if falling
             this.multipleJump = 2;
         } 
 
   // apply physics to the body (this moves the entity)
-  this.body.update(dt);
+    this.body.update(dt);
+  	this.body.falling = (this.body.vel.y * Math.sign(this.body.gravity)) > 0;
+	this.body.jumping = (this.body.falling ? false : this.body.jumping);
   
           // check if we fell into a hole
         if (!this.inViewport && (this.pos.y > me.video.renderer.getHeight()) && (this.body.gravity > 0)) {
@@ -179,9 +178,11 @@ onCollision : function (response, other) {
 
         // Do not respond to the platform (pass through)
         return false;
-      } else if(other.type === "spike") {
+      } if(other.type === "spike") {
 		  this.dead();
-	  } 
+	  } if(other.type === "acid") {
+		  this.hurt();
+	  }
       break;
 	  
 	case me.collision.types.ACTION_OBJECT:
@@ -192,12 +193,12 @@ onCollision : function (response, other) {
 				break;		
 
    case me.collision.types.ENEMY_OBJECT:
-                if (!other.isMovingEnemy) {
+               /*  if (!other.isMovingEnemy) {
                     // spike or any other fixed danger
                     this.body.vel.y -= this.body.maxVel.y * me.timer.tick;
-                    this.hurt();
-                }
-                else {
+                    this.dead();
+                } */
+               // if {
                     // a regular moving enemy entity
                     if ((response.overlapV.y > 0) && this.body.falling) {
                         // jump
@@ -208,7 +209,7 @@ onCollision : function (response, other) {
                     }
                     // Not solid
                     return false;
-                }
+               // }
                 break;
 
             default:
@@ -249,17 +250,13 @@ onCollision : function (response, other) {
 		me.game.viewport.fadeIn("#FFFFFF", 75);
 		//me.audio.play("hurt");
 		game.data.health -= 3;
-        }else{
-			if( game.data.health<= 0)
-			{
-				me.game.world.removeChild(this);
-				me.game.viewport.fadeIn("#fff", 150, function(){
+		me.game.world.removeChild(this);
+		me.game.viewport.fadeIn("#fff", 150, function(){
                 me.state.change(me.state.GAMEOVER);
 				me.audio.play("die", false);
                 me.game.viewport.fadeOut("#fff", 150);
 			})
-		}	
-    }
+        }
  }  
 })  
 /**
@@ -350,7 +347,7 @@ game.EnemyEntity = me.Entity.extend({
     this.startX = x;
     this.endX   = x + width - settings.framewidth
     this.pos.x  = x + width - settings.framewidth;
-	
+	this.updateBounds();
 	this.body.gravity = settings.gravity || me.sys.gravity;
 
     // to remember which side we were walking
@@ -364,7 +361,7 @@ game.EnemyEntity = me.Entity.extend({
     this.isMovingEnemy = true;
 
 	// don't update the entities when out of the viewport
-     this.alwaysUpdate = false;
+     this.alwaysUpdate = true;
 
   },
 

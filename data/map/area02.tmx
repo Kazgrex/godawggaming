@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="60" height="15" tilewidth="32" tileheight="32" nextobjectid="29">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="60" height="15" tilewidth="32" tileheight="32" nextobjectid="30">
  <tileset firstgid="1" name="area01_level_tiles" tilewidth="32" tileheight="32" tilecount="140" columns="20">
   <image source="../img/map/area01_level_tiles.png" trans="003039" width="640" height="241"/>
  </tileset>
@@ -32,24 +32,18 @@
   </object>
  </objectgroup>
  <objectgroup name="collision">
-  <object id="3" x="0" y="456" width="447" height="23"/>
-  <object id="6" x="576" y="388" width="62" height="26"/>
-  <object id="7" x="803" y="455" width="29" height="24"/>
-  <object id="8" x="995" y="453" width="59" height="24"/>
-  <object id="9" x="1153" y="388" width="32" height="28"/>
+  <object id="3" x="0" y="450" width="447" height="29"/>
+  <object id="6" x="576" y="386" width="62" height="28"/>
+  <object id="7" x="803" y="451" width="29" height="28"/>
+  <object id="8" x="995" y="449" width="59" height="28"/>
+  <object id="9" x="1151" y="388" width="32" height="28"/>
   <object id="10" x="1248" y="194" width="33" height="29"/>
   <object id="11" x="1378" y="388" width="31" height="30"/>
-  <object id="13" x="1796" y="419" width="91" height="62"/>
-  <object id="19" x="1601" y="422" width="30" height="28"/>
+  <object id="13" x="1794" y="418" width="91" height="62"/>
+  <object id="19" x="1601" y="418" width="30" height="32"/>
   <object id="20" type="spike" x="1193.5" y="41.5" width="141" height="13"/>
  </objectgroup>
  <objectgroup name="Object Layer 1">
-  <object id="1" name="mainPlayer" x="15" y="364" width="60" height="80">
-   <properties>
-    <property name="framewidth" value="60"/>
-    <property name="image" value="gripe_run_right2"/>
-   </properties>
-  </object>
   <object id="21" name="me.LevelEntity" x="1847.5" y="309.5" height="113">
    <properties>
     <property name="duration" value="250"/>
@@ -98,6 +92,13 @@
     <property name="duration" value="250"/>
     <property name="fade" value="#000000"/>
     <property name="to" value="area03"/>
+   </properties>
+  </object>
+  <object id="29" name="mainPlayer" x="16" y="384" width="40" height="66">
+   <properties>
+    <property name="frameheight" value="80"/>
+    <property name="framewidth" value="60"/>
+    <property name="image" value="gripe_run_right2"/>
    </properties>
   </object>
  </objectgroup>
